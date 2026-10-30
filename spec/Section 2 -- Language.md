@@ -974,12 +974,16 @@ same _Unicode text_ as `"\u{1F4A9}"`. While this legacy form is allowed, it
 should be avoided as a variable-width Unicode escape sequence is a clearer way
 to represent such code points.
 
-Note: The sources `"💩"`, `"\u{1F4A9}"`, and `"\uD83D\uDCA9"` all evaluate to
-the same _Unicode text_ [U+1F4A9], but contain 3, 11, and 14 {SourceCharacter},
+Note: Under the GraphQL static semantics for {StringValue} defined below, the
+sources `"💩"`, `"\u{1F4A9}"`, and `"\uD83D\uDCA9"` all evaluate to the same
+_Unicode text_ [U+1F4A9], but contain 3, 11, and 14 {SourceCharacter},
 respectively, including the quotation marks. The latter two sources contain only
-ASCII source characters. In particular, the legacy form contains no surrogate
-code points in the source text and does not require UTF-16 to represent either
-the source text or the evaluated string value.
+ASCII source characters and no surrogate code points. The legacy form uses the
+same calculation as decoding a _UTF-16_ _surrogate pair_, applied to the
+hexadecimal values written in the two escape sequences. GraphQL adopts this
+calculation as part of its escape-sequence semantics, independently of the
+encoding or internal representation of the source text or the evaluated string
+value. Neither is required to use UTF-16.
 
 When producing a {StringValue}, implementations should use escape sequences to
 represent non-printable control characters (U+0000 to U+001F and U+007F to

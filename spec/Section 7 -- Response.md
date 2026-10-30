@@ -213,8 +213,9 @@ when represented by two UTF-16 code units. A tab occupies one column, regardless
 of its displayed width. An extended grapheme cluster may occupy multiple
 columns.
 
-For example, the unexpected second {`)`} in the following source is at line 1,
-column 15:
+For example, the following are two separate source texts. The unexpected second
+{`)`} is at line 1, column 15 in the first source and line 1, column 17 in the
+second. The emoji consist of one and three Unicode scalar values, respectively:
 
 ```example
 { f(arg: "😀") ) }

@@ -952,6 +952,9 @@ pair_, as described below. Otherwise, the escape sequence must result in a parse
 error. For example both sources `"\uDEAD"` and `"\u{110000}"` are not valid
 {StringValue}.
 
+Error locations for invalid escape sequences are defined in
+[Error Result Format](#sec-Errors.Error-Result-Format).
+
 Escape sequences are only meaningful within a single-quoted string. Within a
 block string, they are simply that sequence of characters (for example
 `"""\n"""` represents the _Unicode text_ [U+005C, U+006E]). Within a comment an

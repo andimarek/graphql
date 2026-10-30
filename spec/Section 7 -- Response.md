@@ -228,6 +228,30 @@ second. The emoji consist of one and three Unicode scalar values, respectively:
 # 👩‍💻 advances the column counter of 3
 ```
 
+For a parsing error caused by an invalid escape sequence within a single-quoted
+{StringValue}, a reported location must identify the backslash ({`\`}) at the
+start of that escape sequence. If a fixed-width Unicode escape sequence has a
+hexadecimal value in the _Leading Surrogate_ range but is not immediately
+followed by a fixed-width Unicode escape sequence with a value in the _Trailing
+Surrogate_ range, the location must identify the start of the leading surrogate
+escape sequence.
+
+For example, in the following source the invalid `\uD800` escape sequence begins
+at line 1, column 23:
+
+```raw graphql counter-example
+{ f(arg: "hello world \uD800") }
+```
+
+In the following source, the valid `\u0041` escape sequence contributes six
+source characters to the column count. The `\uD800` escape sequence is not
+followed by a trailing surrogate escape, so the error location is line 1, column
+17:
+
+```raw graphql counter-example
+{ f(arg: "\u0041\uD800\u0042") }
+```
+
 If an error can be associated to a particular field in the GraphQL result, it
 must contain an entry with the key {"path"} with a _response path_ which
 describes the _response position_ which raised the error. This allows clients to

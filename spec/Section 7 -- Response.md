@@ -216,9 +216,15 @@ columns.
 For example, the unexpected second {`)`} in the following source is at line 1,
 column 15:
 
-```counter-example
+```example
 { f(arg: "😀") ) }
-```
+#              ^ this is column 15 
+# 😀 is a single Unicode scalar value: \u{1F600}
+
+{ f(arg: "👩‍💻") ) }
+#              ^ this is column 17
+# 👩‍💻 is a grapheme cluster composed of: \u{1F469}, \u{200D}, \u{1F4BB}
+# 👩‍💻 advances the column counter of 3
 
 If an error can be associated to a particular field in the GraphQL result, it
 must contain an entry with the key {"path"} with a _response path_ which

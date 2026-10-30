@@ -53,6 +53,11 @@ a _Unicode code point_ from U+0000 to U+D7FF or U+E000 to U+10FFFF. The
 _surrogate code point_ range U+D800 to U+DFFF is excluded. Unicode scalar values
 are informally referred to as "characters" through most of this specification.
 
+Note: A single user-perceived character may consist of multiple Unicode scalar
+values, forming an _extended grapheme cluster_. For example, the emoji `👨‍👩‍👧‍👦`
+consists of seven {SourceCharacter}: four supplementary code points and three
+zero width joiners (U+200D).
+
 This specification defines source text independently of its encoding and does
 not prescribe how implementations represent it internally.
 
@@ -61,11 +66,6 @@ UTF-16, a _supplementary code point_ is encoded as a _surrogate pair_ of two
 16-bit code units. Together, these code units encode one {SourceCharacter}. An
 unpaired surrogate code unit is ill-formed in UTF-16 and does not encode a
 Unicode scalar value. It therefore cannot represent a {SourceCharacter}.
-
-Note: A single user-perceived character may consist of multiple Unicode scalar
-values, forming an _extended grapheme cluster_. For example, the emoji `👨‍👩‍👧‍👦`
-consists of seven {SourceCharacter}: four supplementary code points and three
-zero width joiners (U+200D).
 
 GraphQL syntax can be expressed using only source characters in the ASCII range,
 U+0000 to U+007F. Non-ASCII Unicode scalar values within string values can be

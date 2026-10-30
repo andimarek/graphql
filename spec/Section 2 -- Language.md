@@ -935,17 +935,22 @@ empty strings.
 **Escape Sequences**
 
 In a single-quoted {StringValue}, any _Unicode scalar value_ may be expressed
-using an escape sequence. GraphQL strings allow both C-style escape sequences
-(for example `\n`) and two forms of Unicode escape sequences: one with a
-fixed-width of 4 hexadecimal digits (for example `\u000A`) and one with a
-variable-width most useful for representing a _supplementary code point_ (for
-example `\u{1F4A9}`).
+using an escape sequence. Escape sequences are part of the GraphQL lexical
+grammar and are evaluated using the static semantics below, independently of the
+encoding or internal representation of the source text or the resulting string
+value.
 
-The hexadecimal number encoded by a Unicode escape sequence must describe a
+GraphQL strings allow both C-style escape sequences (for example `\n`) and two
+forms of Unicode escape sequences: one with a fixed-width of 4 hexadecimal
+digits (for example `\u000A`) and one with a variable-width most useful for
+representing a _supplementary code point_ (for example `\u{1F4A9}`).
+
+The hexadecimal number represented by a Unicode escape sequence must describe a
 _Unicode scalar value_, unless it is one of two adjacent fixed-width Unicode
-escape sequences whose values form a _surrogate pair_, as described below.
-Otherwise, the escape sequence must result in a parse error. For example both
-sources `"\uDEAD"` and `"\u{110000}"` are not valid {StringValue}.
+escape sequences whose values correspond to the code units of a _surrogate
+pair_, as described below. Otherwise, the escape sequence must result in a parse
+error. For example both sources `"\uDEAD"` and `"\u{110000}"` are not valid
+{StringValue}.
 
 Escape sequences are only meaningful within a single-quoted string. Within a
 block string, they are simply that sequence of characters (for example
@@ -960,19 +965,21 @@ allowed within strings. If using GraphQL within a system which only supports
 ASCII, then escape sequences may be used to represent all Unicode characters
 outside of the ASCII range.
 
-For legacy reasons, a _supplementary code point_ may be escaped by two
-fixed-width Unicode escape sequences whose values form a _surrogate pair_. For
+For legacy reasons, a _supplementary code point_ may be escaped by two adjacent
+fixed-width Unicode escape sequences. Their hexadecimal values correspond to the
+leading and trailing code units of a _UTF-16_ _surrogate pair_ and are combined
+into one _Unicode scalar value_ using the same calculation as in UTF-16. For
 example the input `"\uD83D\uDCA9"` is a valid {StringValue} which represents the
 same _Unicode text_ as `"\u{1F4A9}"`. While this legacy form is allowed, it
 should be avoided as a variable-width Unicode escape sequence is a clearer way
-to encode such code points.
+to represent such code points.
 
-Note: Escape sequences consist of source characters and are evaluated to produce
-a string value. For example, the sources `"💩"`, `"\u{1F4A9}"`, and
-`"\uD83D\uDCA9"` all evaluate to the same _Unicode text_ [U+1F4A9], but contain
-3, 11, and 14 {SourceCharacter}, respectively, including the quotation marks.
-The latter two sources contain only ASCII source characters, regardless of the
-encoding used to represent the source text.
+Note: The sources `"💩"`, `"\u{1F4A9}"`, and `"\uD83D\uDCA9"` all evaluate to
+the same _Unicode text_ [U+1F4A9], but contain 3, 11, and 14 {SourceCharacter},
+respectively, including the quotation marks. The latter two sources contain only
+ASCII source characters. In particular, the legacy form contains no surrogate
+code points in the source text and does not require UTF-16 to represent either
+the source text or the evaluated string value.
 
 When producing a {StringValue}, implementations should use escape sequences to
 represent non-printable control characters (U+0000 to U+001F and U+007F to

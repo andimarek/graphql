@@ -58,12 +58,13 @@ compatible with as many existing tools, languages, and serialization formats as
 possible and avoid display issues in text editors and source control. Non-ASCII
 Unicode scalar values may appear within {StringValue} and {Comment}.
 
-Note: Source text is defined independently of its encoding. An implementation
-which uses _UTF-16_ to represent GraphQL documents in memory (for example,
-JavaScript or Java) represents a _supplementary code point_ with a _surrogate
-pair_ of two 16-bit _code units_. This pair represents one {SourceCharacter}. An
-unpaired surrogate code unit does not represent a Unicode scalar value and is
-not a valid {SourceCharacter}.
+Note: This specification defines source text as a sequence of {SourceCharacter}
+and does not prescribe how implementations represent it internally. For example,
+JavaScript and Java strings are sequences of _UTF-16_ _code units_. In UTF-16, a
+_supplementary code point_ is encoded as a _surrogate pair_ of two 16-bit code
+units. Together, these code units encode one {SourceCharacter}. An unpaired
+surrogate code unit is ill-formed in UTF-16 and does not encode a Unicode scalar
+value. It therefore cannot represent a {SourceCharacter}.
 
 Note: A single user-perceived character may consist of multiple Unicode scalar
 values, forming an _extended grapheme cluster_. For example, the emoji `👨‍👩‍👧‍👦`

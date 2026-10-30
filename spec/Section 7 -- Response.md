@@ -199,7 +199,7 @@ associated syntax element.
 
 The {"line"} is one plus the number of {LineTerminator} sequences preceding the
 associated syntax element in the source text. The {"column"} is one plus the
-number of Unicode code points preceding that syntax element on its line. A line
+number of {SourceCharacter} preceding that syntax element on its line. A line
 begins at the start of the source text or immediately after a {LineTerminator}.
 A carriage return followed by a new line is a single {LineTerminator}.
 

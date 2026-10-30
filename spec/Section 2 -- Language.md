@@ -53,23 +53,32 @@ a _Unicode code point_ from U+0000 to U+D7FF or U+E000 to U+10FFFF. The
 _surrogate code point_ range U+D800 to U+DFFF is excluded. Unicode scalar values
 are informally referred to as "characters" through most of this specification.
 
-A GraphQL document may be expressed only in the ASCII range to be as widely
-compatible with as many existing tools, languages, and serialization formats as
-possible and avoid display issues in text editors and source control. Non-ASCII
-Unicode scalar values may appear within {StringValue} and {Comment}.
+This specification defines source text independently of its encoding and does
+not prescribe how implementations represent it internally.
 
-Note: This specification defines source text as a sequence of {SourceCharacter}
-and does not prescribe how implementations represent it internally. For example,
-JavaScript and Java strings are sequences of _UTF-16_ _code units_. In UTF-16, a
-_supplementary code point_ is encoded as a _surrogate pair_ of two 16-bit code
-units. Together, these code units encode one {SourceCharacter}. An unpaired
-surrogate code unit is ill-formed in UTF-16 and does not encode a Unicode scalar
-value. It therefore cannot represent a {SourceCharacter}.
+Note: JavaScript and Java strings are sequences of _UTF-16_ _code units_. In
+UTF-16, a _supplementary code point_ is encoded as a _surrogate pair_ of two
+16-bit code units. Together, these code units encode one {SourceCharacter}. An
+unpaired surrogate code unit is ill-formed in UTF-16 and does not encode a
+Unicode scalar value. It therefore cannot represent a {SourceCharacter}.
 
 Note: A single user-perceived character may consist of multiple Unicode scalar
 values, forming an _extended grapheme cluster_. For example, the emoji `👨‍👩‍👧‍👦`
 consists of seven {SourceCharacter}: four supplementary code points and three
 zero width joiners (U+200D).
+
+GraphQL syntax can be expressed using only source characters in the ASCII range,
+U+0000 to U+007F. Non-ASCII Unicode scalar values within string values can be
+represented using Unicode escape sequences in single-quoted {StringValue}. This
+allows documents to be written using only ASCII source characters while
+preserving their definitions and string values, improving compatibility with
+tools, languages, and serialization formats. ASCII-encoded source text is also
+valid UTF-8.
+
+Note: Unicode escape sequences are not interpreted within {Comment} or
+{BlockString}. Producing ASCII-only source text may therefore require omitting
+or rewriting comments and replacing block strings with single-quoted strings
+that preserve their evaluated values.
 
 ### White Space
 
